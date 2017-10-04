@@ -8,7 +8,7 @@ import org.junit.Test
 /**
  * Created by devondapuzzo on 10/2/17.
  */
-class DollarTest {
+class MoneyTest {
     @Test
     fun shouldMultiply() {
         val five: Money = dollar(5)
