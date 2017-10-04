@@ -16,4 +16,6 @@ open class Money(var amount: Int, var currency: String) {
         fun dollar(amount: Int): Money = Money(amount, "USD")
         fun franc(amount: Int): Money = Money(amount, "CHF")
     }
+
+    operator fun plus(addend: Money): Money = Money(addend.amount + amount, currency)
 }

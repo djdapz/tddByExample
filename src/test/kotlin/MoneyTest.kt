@@ -5,9 +5,6 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/**
- * Created by devondapuzzo on 10/2/17.
- */
 class MoneyTest {
     @Test
     fun shouldMultiply() {
@@ -35,5 +32,11 @@ class MoneyTest {
     fun testCurrency() {
         assertThat("USD").isEqualTo(dollar(1).currency)
         assertThat("CHF").isEqualTo(franc(1).currency)
+    }
+
+    @Test
+    fun testSimpleAddition() {
+        val sum: Money = Money.dollar(5) + Money.dollar(5)
+        assertThat(sum).isEqualTo(dollar(10))
     }
 }
