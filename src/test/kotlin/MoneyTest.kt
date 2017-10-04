@@ -1,3 +1,4 @@
+import Bank.Companion.reduce
 import Money.Companion.dollar
 import Money.Companion.franc
 import org.assertj.core.api.Assertions.assertThat
@@ -14,14 +15,6 @@ class MoneyTest {
     }
 
     @Test
-    fun shouldMultiplyFrancs() {
-        val five: Money = franc(5)
-        assertThat(franc(10)).isEqualTo(five * 2)
-        assertThat(franc(15)).isEqualTo(five * 3)
-    }
-
-
-    @Test
     fun shouldBeAbleToAssertEquality() {
         assertTrue(dollar(5) == (dollar(5)))
         assertFalse(dollar(5) == (dollar(6)))
@@ -36,9 +29,30 @@ class MoneyTest {
 
     @Test
     fun testSimpleAddition() {
-        val sum: Expression = Money.dollar(5) + Money.dollar(5)
-        val bank: Bank = Bank()
-        val reduced: Money = bank.reduce(sum, "USD")
+        val sum  = dollar(5) + dollar(5)
+        val reduced = reduce(sum, "USD")
         assertThat(reduced).isEqualTo(dollar(10))
+    }
+
+    @Test
+    fun testPlusReturnsSum() {
+        val five = dollar(5)
+        val result = five + five
+        val sum = result as Sum
+        assertThat(five).isEqualTo(sum.addend)
+        assertThat(five).isEqualTo(sum.augend)
+    }
+
+    @Test
+    fun testReduceSum() {
+        val sum = Sum(dollar(3), dollar(4))
+        val result = Bank.reduce(sum, "USD")
+        assertThat(result).isEqualTo(dollar(7))
+    }
+
+    @Test
+    fun testReduceMoney() {
+        val result = Bank.reduce(dollar(1), "USD")
+        assertThat(result).isEqualTo(dollar(1))
     }
 }
