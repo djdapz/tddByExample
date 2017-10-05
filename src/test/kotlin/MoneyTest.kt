@@ -1,4 +1,6 @@
-import Bank.Companion.reduce
+import Bank.Companion.addRate
+import Bank.Companion.getRate
+import Bank.Companion.reduceBank
 import Money.Companion.dollar
 import Money.Companion.franc
 import org.assertj.core.api.Assertions.assertThat
@@ -30,7 +32,7 @@ class MoneyTest {
     @Test
     fun testSimpleAddition() {
         val sum  = dollar(5) + dollar(5)
-        val reduced = reduce(sum, "USD")
+        val reduced = reduceBank(sum, "USD")
         assertThat(reduced).isEqualTo(dollar(10))
     }
 
@@ -46,13 +48,40 @@ class MoneyTest {
     @Test
     fun testReduceSum() {
         val sum = Sum(dollar(3), dollar(4))
-        val result = Bank.reduce(sum, "USD")
+        val result = reduceBank(sum, "USD")
         assertThat(result).isEqualTo(dollar(7))
     }
 
     @Test
     fun testReduceMoney() {
-        val result = Bank.reduce(dollar(1), "USD")
+        val result = reduceBank(dollar(1), "USD")
         assertThat(result).isEqualTo(dollar(1))
+    }
+
+    @Test
+    fun testReduceMoneyDifferentCurrency() {
+        addRate("CHF", "USD", 2)
+        var result = reduceBank(franc(2), "USD")
+        assertThat(dollar(1)).isEqualTo(result)
+
+        addRate("CHF", "USD", 3)
+        result = reduceBank(franc(6), "USD")
+        assertThat(dollar(2)).isEqualTo(result)
+    }
+
+    @Test
+    fun testIdentityRate() {
+        assertThat(getRate("USD", "USD")).isEqualTo(1)
+    }
+
+    @Test
+    fun testMixedAddition() {
+        val fiveBucks = dollar(5)
+        val tenFrancs = franc(10)
+
+        addRate("CHF", "USD", 2)
+        val result = reduceBank(fiveBucks + tenFrancs, "USD")
+
+        assertThat(result).isEqualTo(dollar(10))
     }
 }
