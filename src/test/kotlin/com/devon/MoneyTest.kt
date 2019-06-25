@@ -1,8 +1,12 @@
-import Bank.Companion.addRate
-import Bank.Companion.getRate
-import Bank.Companion.reduceBank
-import Money.Companion.dollar
-import Money.Companion.franc
+package com.devon
+
+import com.devon.bank.Bank.Companion.addRate
+import com.devon.bank.Bank.Companion.getRate
+import com.devon.bank.Bank.Companion.reduceBank
+import com.devon.expression.Money
+import com.devon.expression.Money.Companion.dollar
+import com.devon.expression.Money.Companion.franc
+import com.devon.expression.Sum
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -80,8 +84,23 @@ class MoneyTest {
         val tenFrancs = franc(10)
 
         addRate("CHF", "USD", 2)
-        val result = reduceBank(fiveBucks + tenFrancs, "USD")
 
-        assertThat(result).isEqualTo(dollar(10))
+        val sum = fiveBucks +tenFrancs + fiveBucks
+        val result = reduceBank(sum, "USD")
+
+        assertThat(result).isEqualTo(dollar(15))
+    }
+
+    @Test
+    fun testSumTimes() {
+        val fiveBucks = dollar(5)
+        val tenFrancs = franc(10)
+
+        addRate("CHF", "USD", 2)
+
+        val sum = (fiveBucks +tenFrancs ) * 2
+        val result = reduceBank(sum, "USD")
+
+        assertThat(result).isEqualTo(dollar(20))
     }
 }
